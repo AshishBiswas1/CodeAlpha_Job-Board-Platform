@@ -78,5 +78,12 @@ employerSchema.pre('save', async function (next) {
   next();
 });
 
+employerSchema.methods.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
+
 const Employer = mongoose.model('Employer', employerSchema);
 module.exports = Employer;
