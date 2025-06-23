@@ -3,6 +3,8 @@ const applicationController = require('./../controller/applicationController');
 
 const router = express.Router();
 
+router.get('/:id/status', applicationController.updateAppliccationStatus);
+
 router
   .route('/')
   .get(applicationController.getAllApplications)

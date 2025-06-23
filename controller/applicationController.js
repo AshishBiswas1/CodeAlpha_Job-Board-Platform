@@ -73,3 +73,34 @@ exports.removeApplication = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+exports.updateAppliccationStatus = catchAsync(async (req, res, next) => {
+  const { status } = req.body;
+  const allowedStatuses = [
+    'applied',
+    'under_review',
+    'shortlisted',
+    'interview_scheduled',
+    'rejected',
+    'hired'
+  ];
+
+  if (!allowedStatuses.includes(status)) {
+    return next(new AppError('Invalid status!', 400));
+  }
+
+  const application = await Application.findByIdAndUpdate(
+    req.params.id,
+    { status },
+    { new: true, runValidators: true }
+  ).populate('candidate job');
+
+  if (!application) {
+    return res.status(404).json({ message: 'Application not found' });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: { application }
+  });
+});

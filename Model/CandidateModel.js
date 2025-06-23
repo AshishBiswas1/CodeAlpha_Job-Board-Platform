@@ -45,5 +45,13 @@ const candidateSchema = new mongoose.Schema({
   }
 });
 
+candidateSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 12);
+  this.confirmpassword = undefined;
+  next();
+});
+
 const Candidate = mongoose.model('Candidate', candidateSchema);
 module.exports = Candidate;
