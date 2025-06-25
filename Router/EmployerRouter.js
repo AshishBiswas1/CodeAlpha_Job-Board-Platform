@@ -35,6 +35,14 @@ router
     employerController.deleteMe
   );
 
+router
+  .route('/Me')
+  .get(
+    authController.protect(Employer),
+    authController.restrictTo('employer'),
+    employerController.getMe
+  );
+
 // Post Path here is only used by admin to create a new Employer
 router.use(
   authController.protect(Employer),

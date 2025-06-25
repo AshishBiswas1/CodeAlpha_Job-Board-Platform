@@ -36,6 +36,14 @@ router
     candidateController.deleteMe
   );
 
+router
+  .route('/Me')
+  .get(
+    authController.protect(Candidate),
+    authController.restrictTo('candidate'),
+    candidateController.getMe
+  );
+
 router.use(
   authController.protect(Candidate),
   authController.restrictTo('admin')

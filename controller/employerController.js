@@ -124,3 +124,20 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+exports.getMe = catchAsync(async (req, res, next) => {
+  req.params.id = req.user.id;
+
+  const user = await Employer.findById(req.params.id);
+
+  if (!user) {
+    return next(new AppError('No Employer found by that Id', 404));
+  }
+
+  res.status(200).json({
+    status: 'Success',
+    data: {
+      user
+    }
+  });
+});
