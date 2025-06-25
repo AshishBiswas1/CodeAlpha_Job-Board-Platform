@@ -49,12 +49,6 @@ const employerSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
-    job: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Job'
-      }
-    ],
     passwordChangedAt: {
       type: Date
     },
@@ -66,19 +60,9 @@ const employerSchema = new mongoose.Schema(
     }
   },
   {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
     timestamps: true
   }
 );
-
-employerSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'job',
-    select: 'title description location salary'
-  });
-  next();
-});
 
 employerSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

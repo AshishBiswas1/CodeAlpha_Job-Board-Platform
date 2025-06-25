@@ -12,6 +12,30 @@ router
   .route('/resetPassword/:token')
   .patch(authController.resetPassword(Candidate));
 
+router
+  .route('/updatepassword')
+  .patch(
+    authController.protect(Candidate),
+    authController.restrictTo('candidate'),
+    authController.updatePassword(Candidate)
+  );
+
+router
+  .route('/updateMe')
+  .patch(
+    authController.protect(Candidate),
+    authController.restrictTo('candidate'),
+    candidateController.updateMe
+  );
+
+router
+  .route('/deleteMe')
+  .patch(
+    authController.protect(Candidate),
+    authController.restrictTo('candidate'),
+    candidateController.deleteMe
+  );
+
 router.use(
   authController.protect(Candidate),
   authController.restrictTo('admin')

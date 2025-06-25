@@ -78,7 +78,8 @@ const createNewUser = async (Model, req) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    confirmpassword: req.body.confirmpassword
+    confirmpassword: req.body.confirmpassword,
+    company: req.body.company
   }));
 };
 
@@ -209,6 +210,30 @@ exports.resetPassword = (Model) =>
     // 3) Update changedPasswordAt property for the user
 
     // 4) Log the user in, send JWT
+
+    createSendToken(user, 200, res);
+  });
+
+exports.updatePassword = (Model) =>
+  catchAsync(async (req, res, next) => {
+    // 1) Get user from the collection
+    const user = await Model.findById(req.user.id).select('+password');
+
+    if (!user) {
+      return next(new AppError('User not found with that Id', 404));
+    }
+
+    // 2) Check if posted current password is correct
+    if (
+      !(await user.correctPassword(req.body.currentPassword, user.password))
+    ) {
+      return next(new AppError('Your current password is incorrect', 404));
+    }
+
+    // 3) Save the posted password and send back the response
+    user.password = req.body.password;
+    user.confirmpassword = req.body.confirmpassword;
+    await user.save();
 
     createSendToken(user, 200, res);
   });

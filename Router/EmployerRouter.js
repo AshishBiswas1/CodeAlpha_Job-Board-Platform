@@ -12,6 +12,29 @@ router
   .route('/resetPassword/:token')
   .patch(authController.resetPassword(Employer));
 
+router
+  .route('/updatePassword')
+  .patch(
+    authController.protect(Employer),
+    authController.restrictTo('employer'),
+    authController.updatePassword(Employer)
+  );
+
+router
+  .route('/updateMe')
+  .patch(
+    authController.protect(Employer),
+    authController.restrictTo('employer'),
+    employerController.updateMe
+  );
+router
+  .route('/deleteMe')
+  .patch(
+    authController.protect(Employer),
+    authController.restrictTo('employer'),
+    employerController.deleteMe
+  );
+
 // Post Path here is only used by admin to create a new Employer
 router.use(
   authController.protect(Employer),

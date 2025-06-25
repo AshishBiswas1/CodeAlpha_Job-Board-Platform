@@ -3,10 +3,23 @@ const catchAsync = require('./../util/catchAsync');
 const AppError = require('./../util/appError');
 
 exports.getAllJobs = catchAsync(async (req, res, next) => {
-  const jobs = await Job.find();
+  const queryObj = { ...req.query };
+  const excludedFields = ['page', 'sort', 'limit', 'fields'];
+  excludedFields.forEach((el) => delete queryObj[el]);
+
+  let queryStr = JSON.stringify(queryObj);
+  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+  console.log(JSON.parse(queryStr));
+
+  console.log(req.query, queryObj);
+  const query = Job.find(JSON.parse(queryStr));
+
+  const jobs = await query;
 
   res.status(200).json({
     status: 'Success',
+    total: jobs.length,
     data: {
       jobs
     }

@@ -69,15 +69,6 @@ candidateSchema.pre('save', async function (next) {
   next();
 });
 
-candidateSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-
-  this.password = await bcrypt.hash(this.password, 12);
-
-  this.confirmpassword = undefined;
-  next();
-});
-
 candidateSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
