@@ -45,6 +45,10 @@ const candidateSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  image: {
+    type: String,
+    default: 'default.jpg'
+  },
   passwordChangedAt: {
     type: Date
   },

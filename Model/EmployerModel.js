@@ -57,6 +57,10 @@ const employerSchema = new mongoose.Schema(
     },
     passwordResetExpiersAt: {
       type: Date
+    },
+    image: {
+      type: String,
+      default: 'default.jpg'
     }
   },
   {

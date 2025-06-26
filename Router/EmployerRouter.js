@@ -25,6 +25,8 @@ router
   .patch(
     authController.protect(Employer),
     authController.restrictTo('employer'),
+    employerController.uploadEmployerPhoto,
+    employerController.resizeEmployerPhoto,
     employerController.updateMe
   );
 router

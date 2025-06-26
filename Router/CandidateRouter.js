@@ -25,6 +25,9 @@ router
   .patch(
     authController.protect(Candidate),
     authController.restrictTo('candidate'),
+    candidateController.uploadCandidateFiles,
+    candidateController.resizeCandidatePhoto,
+    candidateController.saveCandidateResume,
     candidateController.updateMe
   );
 
