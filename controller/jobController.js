@@ -1,21 +1,15 @@
 const Job = require('./../Model/JobModel');
 const catchAsync = require('./../util/catchAsync');
 const AppError = require('./../util/appError');
+const APIFeatures = require('./../util/apiFeatures');
 
 exports.getAllJobs = catchAsync(async (req, res, next) => {
-  const queryObj = { ...req.query };
-  const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  excludedFields.forEach((el) => delete queryObj[el]);
-
-  let queryStr = JSON.stringify(queryObj);
-  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
-  console.log(JSON.parse(queryStr));
-
-  console.log(req.query, queryObj);
-  const query = Job.find(JSON.parse(queryStr));
-
-  const jobs = await query;
+  const features = new APIFeatures(Job.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const jobs = await features.query;
 
   res.status(200).json({
     status: 'Success',

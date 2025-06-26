@@ -37,7 +37,14 @@ const jobSchema = new mongoose.Schema(
     }
   },
   {
-    toJSON: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret) {
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        return ret;
+      }
+    },
     toObject: { virtuals: true },
     timestamps: true
   }
