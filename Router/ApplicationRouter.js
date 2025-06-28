@@ -1,7 +1,7 @@
 const express = require('express');
 const applicationController = require('./../controller/applicationController');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.get('/:id/status', applicationController.updateAppliccationStatus);
 

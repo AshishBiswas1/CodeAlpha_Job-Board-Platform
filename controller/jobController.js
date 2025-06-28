@@ -83,3 +83,14 @@ exports.removeJobProfile = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+exports.getJobsByEmployer = catchAsync(async (req, res, next) => {
+  const jobs = await Job.find({ employer: req.user.id });
+
+  res.status(200).json({
+    status: 'Success',
+    data: {
+      jobs
+    }
+  });
+});

@@ -2,8 +2,12 @@ const express = require('express');
 const Employer = require('./../Model/EmployerModel');
 const employerController = require('./../controller/employerController');
 const authController = require('./../controller/authController');
+const JobRouter = require('./JobRouter');
+const ApplicationRouter = require('./ApplicationRouter');
 
 const router = express.Router();
+
+router.use('/:jobId/applications', ApplicationRouter);
 
 router.route('/signup').post(authController.Employersignup);
 router.route('/login').post(authController.Employerlogin);

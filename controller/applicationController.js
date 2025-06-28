@@ -1,9 +1,13 @@
 const Application = require('./../Model/ApplicationModel');
 const catchAsync = require('./../util/catchAsync');
 const AppError = require('./../util/appError');
+const Job = require('./../Model/JobModel');
+const Candidate = require('./../Model/CandidateModel');
 
 exports.getAllApplications = catchAsync(async (req, res, next) => {
-  const applications = await Application.find();
+  const filter = {};
+  if (req.params.jobId) filter = { job: req.params.jobId };
+  const applications = await Application.find(filter);
 
   res.status(200).json({
     status: 'Success',
@@ -104,3 +108,39 @@ exports.updateAppliccationStatus = catchAsync(async (req, res, next) => {
     data: { application }
   });
 });
+
+exports.applyForJob = catchAsync(async (req, res, next) => {
+  const { jobId } = req.params;
+  const candidateId = req.user.id;
+
+  const job = await Job.findById(jobId);
+
+  if (!job) {
+    return next(new AppError('No jobs found By that Id.', 404));
+  }
+
+  const existingApplication = await Application.findOne({
+    job: jobId,
+    candidate: candidateId
+  });
+  const candidate = await Candidate.findById(candidateId);
+
+  if (existingApplication) {
+    return next(new AppError('You have already applied for this job.', 400));
+  }
+
+  const application = await Application.create({
+    job: jobId,
+    candidate: candidateId,
+    resume: candidate.resume
+  });
+
+  res.status(200).json({
+    status: 'Success',
+    data: {
+      application
+    }
+  });
+});
+
+exports.getAllApplicationOnJob = catchAsync(async (req, res, next) => {});
