@@ -142,5 +142,3 @@ exports.applyForJob = catchAsync(async (req, res, next) => {
     }
   });
 });
-
-exports.getAllApplicationOnJob = catchAsync(async (req, res, next) => {});
